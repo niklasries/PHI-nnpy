@@ -1,0 +1,18 @@
+[nextnano++]
+exe = C:\Users\riesn\Desktop\BachelorArbeit\nextnano\Version\2023_08_07\nextnano++\bin 64bit\nextnano++_Intel_64bit.exe
+license = C:\Users\riesn\Documents\nextnano\License_nnp.lic
+database = C:\Users\riesn\Desktop\BachelorArbeit\nextnano\Version\2023_08_07\nextnano++\Syntax\database_nnp.in
+outputdirectory = C:\Users\riesn\Desktop\Neuer Ordner
+threads = 0
+
+[nextnano3]
+exe = C:\Users\riesn\Desktop\BachelorArbeit\nextnano\Version\2023_08_07\nextnano3\Intel 64bit\nextnano3_Intel_64bit.exe
+license = C:\Users\riesn\Documents\nextnano\License_nnp.lic
+database = C:\Users\riesn\Desktop\BachelorArbeit\nextnano\Version\2023_08_07\nextnano3\Syntax\database_nn3.in
+outputdirectory = C:\Users\riesn\Desktop\Neuer Ordner
+threads = 0
+debuglevel = 0
+cancel = -1
+softkill = -1
+
+

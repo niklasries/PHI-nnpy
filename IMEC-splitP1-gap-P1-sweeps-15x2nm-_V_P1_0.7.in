@@ -1,0 +1,618 @@
+######################
+#total range of the device in x and y direction
+$DomainXstart = -154
+$DomainXend = 215
+
+$DomainYstart = -140
+$DomainYend = 160
+#cutoff,at end of c-gate and end of stbridge
+#######################
+
+
+
+#how much the gates can overlap, IMEC device description said 9nm
+$GATE_OVERLAP = 10
+
+#shape of the QD, can be non symmetrical
+$DOTW = 60
+$DOTH = 60
+
+#dimensions of the set dot
+$SETDW = 70
+$SETDH = 70
+
+#set barrier width
+$SETBW = 30
+
+#gap between 2 plungers
+$P2P_GAP = 40
+
+#overlap of the R-resavoir and the C-gate
+$RC_OVERLAP = 35
+
+#Barrier gate height staring from the cutout of the dot from the c-gate
+$B_HEIGHT_FROM_C = 35
+
+#distance between the C-gate edge and the cutout for the qd
+$C_CD = 30
+
+#width of the plungers
+$P2W = 70
+$P1W = 80
+
+$P1H = 10 # [30,40,50,60]
+
+#Gap between the set and the first dot
+$SET_QD1_GAP = 54
+
+
+$number_eigenvalues = 4
+$CapFermi = 0 # 0.7
+$T = 0.02 # 4E0
+$OXIDE_THICKNESS = 8 # SiO2
+$OXIDE_THICKNESS2 = 5
+$OXIDE_THICKNESS3 = 5
+$GATE_THICKNESS = 20 # metal gate (TiN gate)
+$GATE_THICKNESS2 = 20
+$GATE_THICKNESS3 = 20
+$SI_SUBSTRATE_THICKNESS = 200 # Si substrate
+
+#layer definitions in z direction
+
+$L1_start = -$OXIDE_THICKNESS-$GATE_THICKNESS
+$L1_end = -$OXIDE_THICKNESS
+
+$L2_start = -$OXIDE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2
+$L2_end = -$OXIDE_THICKNESS-$OXIDE_THICKNESS2
+
+$L3_start = -$OXIDE_THICKNESS-$OXIDE_THICKNESS2-$OXIDE_THICKNESS3-$GATE_THICKNESS3
+$L3_end = -$OXIDE_THICKNESS-$OXIDE_THICKNESS2-$OXIDE_THICKNESS3
+
+$FINE_GRID_RESOLUTION = 1
+$FINEST_GRID_RESOLUTION = 1 # 0.5
+
+$COARSER_GRID_RESOLUTION = 100
+$COARSE_GRID_RESOLUTION = 8
+
+$SCHOTTKY_BARRIER = 3.25
+
+$V_B1 = 0.47
+$V_B2 = 3 # 0
+$V_P1 = 0.74 # [0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,3.0,3.1,3.2,3.3,3.4,3.5]
+$V_P1M = 0.74
+$V_P2 = 3 # [0,0.5, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7,0.8,0.9,1.0, 1.44, 1.46, 1.48, 1.5, 2,3]
+$V_C = -0.2
+$V_R = 3
+$V_LB = 0.18
+$V_RB = 0.18
+$V_STB = 3.5 # 0
+
+
+
+
+global{ 
+   simulate3D{}
+
+   crystal_zb{
+      x_hkl = [1, 0, 0]
+      y_hkl = [0, 1, 0]
+
+   }
+
+   substrate{
+      name = "Si" # relaxed (substrate)
+         }
+
+   temperature = $T # Kelvin
+   # WARNING: Varshni parameters are always used in nextnano++
+   # WARNING: lattice constants are always temperature dependent in nextnano++
+}
+
+grid{
+   xgrid{
+      line{ pos = $DomainXstart spacing = 25.0 }
+      line{ pos = -50 spacing = 10.0 }
+      line{ pos = -40 spacing = 1.0 }
+      line{ pos = -30 spacing = 1 }
+      
+      line{ pos = 80 spacing = 1 }
+      line{ pos = 90 spacing = 1.0 }
+      line{ pos = 100 spacing = 10.0 } 
+      line{ pos = $DomainXend spacing = 25.0 }
+
+#      line{ pos = $DomainXstart spacing = 1 }
+#      
+#      line{ pos = $DomainXend  spacing = 1 }
+
+
+   }
+
+   ygrid{
+      line{ pos = $DomainYstart spacing = 25.0 }
+      line{ pos = -50 spacing = 10.0 }
+      line{ pos = -40 spacing = 1.0 }
+      line{ pos = -30 spacing = 1 }
+      
+      line{ pos = 30 spacing = 1 }
+      line{ pos = 40 spacing = 1.0 }
+      line{ pos = 50 spacing = 10.0 }
+      line{ pos = $DomainYend spacing = 25.0 }
+
+
+#      line{ pos = $DomainYstart spacing = 1 }
+#      
+#      line{ pos = $DomainYend  spacing = 1 }
+
+   }
+   zgrid{
+      line{ pos = -$OXIDE_THICKNESS-$OXIDE_THICKNESS2-$OXIDE_THICKNESS3-$GATE_THICKNESS-$GATE_THICKNESS2-$GATE_THICKNESS3 spacing = $COARSE_GRID_RESOLUTION } # gate and oxide 
+      line{ pos = -1.0 spacing = $FINE_GRID_RESOLUTION } #transition oxide to Si cap
+      line{ pos = 0.0  spacing = $FINEST_GRID_RESOLUTION } # Si cap 
+      line{ pos = 10 spacing = $FINEST_GRID_RESOLUTION } #transition to Si-substrate
+      line{ pos = 15 spacing = $FINE_GRID_RESOLUTION }
+      line{ pos= $SI_SUBSTRATE_THICKNESS spacing = $COARSER_GRID_RESOLUTION} # Ground
+
+}
+
+}
+
+structure{
+   output_region_index{ boxes = no }
+   output_material_index{ boxes = no }
+   output_alloy_composition{ boxes = no }
+   output_impurities{ boxes = no }
+   
+   region{
+      everywhere{ # (default region in nextnano3)
+      }
+      binary{ name = "SiO2"}
+      
+
+   }
+      # Fill everzthing with an Oxide barrier for the gates to be placed in
+   region{
+      cuboid{
+         z = [-$OXIDE_THICKNESS-$OXIDE_THICKNESS2-$OXIDE_THICKNESS3-$GATE_THICKNESS-$GATE_THICKNESS2-$GATE_THICKNESS3, 0E0]
+         x = [$DomainXstart, $DomainXend]
+         y = [$DomainYstart, $DomainYend]
+      }
+      binary{ name = "SiO2"
+      }
+   }
+
+   region{  # Si-Substrate
+      cuboid{
+         z = [20E0, $SI_SUBSTRATE_THICKNESS]
+         x = [$DomainXstart, $DomainXend]
+         y = [$DomainYstart, $DomainYend]
+      }
+      contact{name=Fermi0}
+            binary{
+         name = "Si"
+      }
+      integrate{
+         electron_density{}
+		 #hole_density{}
+         label = "Substrate"
+      }
+
+   }
+
+region{  # 2   nm    strained Si cap (undoped)
+      cuboid{
+         z = [0E0, 20E0]
+         x = [$DomainXstart, $DomainXend]
+         y = [$DomainYstart, $DomainYend]
+
+      }
+
+      contact { name = SiCap}
+      binary{
+         name = "Si"
+      }
+      integrate{
+         electron_density{}
+         label = "cap"
+      }
+
+   }
+
+
+#Gate stack
+region{
+      polygonal_prism{ # B1 layer 3
+           z=[$L3_start,$L3_end]
+            #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2-$OXIDE_THICKNESS3-$GATE_THICKNESS3, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2-$OXIDE_THICKNESS3]
+		#B1={($DOTH/2,-$DOTH/2-$BHEIGHT_FROM_C),($DOTW/2+$GATE_OVERLAP+$P2P_GAP+$GATE_OVERLAP,-$DOTH/2-$BHEIGHT_FROM_C),($DOTW/2+$GATE_OVERLAP+$P2P_GAP+$GATE_OVERLAP,$DomainYend),($DOTH/2,$DomainYend)}
+         vertex{x=$DOTH/2 y=$DOTH/2+$B_HEIGHT_FROM_C}
+
+         vertex{x=$DOTW/2+$GATE_OVERLAP+$P2P_GAP+$GATE_OVERLAP  y=$DOTH/2+$B_HEIGHT_FROM_C}
+
+         vertex{x=$DOTW/2+$GATE_OVERLAP+$P2P_GAP+$GATE_OVERLAP y=$DomainYstart}
+
+         vertex{x=$DOTH/2 y=$DomainYstart}
+         axis=[0,0,-1]
+
+      }
+      contact { name = B1}
+   }
+
+region{
+      polygonal_prism{ # B2 layer 3
+z=[$L3_start,$L3_end]
+
+         
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2-$OXIDE_THICKNESS3-$GATE_THICKNESS3, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2-$OXIDE_THICKNESS3]
+
+            #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2-$OXIDE_THICKNESS3-$GATE_THICKNESS3, -$OXIDE_THICKNESS-$OXIDE_THICKNESS2-$OXIDE_THICKNESS3]
+		#B2={($DOTW/2+$P2P_GAP+$P2W,-$DOTH/2-$BHEIGHT_FROM_C),($DOTW/2+$P2P_GAP+$P2W+$P2P_GAP+$GATE_OVERLAP,-$DOTH/2-$BHEIGHT_FROM_C),($DOTW/2+$P2P_GAP+$P2W+$P2P_GAP+$GATE_OVERLAP,$DomainYend),($DOTW/2+$P2P_GAP+$P2W,$DomainYend)}
+    
+         vertex{x=$DOTW/2+$P2P_GAP+$P2W y=$DOTH/2+$B_HEIGHT_FROM_C}
+
+         vertex{x=$DOTW/2+$P2P_GAP+$P2W+$P2P_GAP+$GATE_OVERLAP+$GATE_OVERLAP  y=$DOTH/2+$B_HEIGHT_FROM_C}
+
+         vertex{x=$DOTW/2+$P2P_GAP+$P2W+$P2P_GAP+$GATE_OVERLAP+$GATE_OVERLAP y=$DomainYstart}
+
+         vertex{x=$DOTW/2+$P2P_GAP+$P2W y=$DomainYstart}
+axis=[0,0,-1]
+
+      }
+      contact { name = B2}
+   }
+
+region{
+      polygonal_prism{ #STB layer 3
+       z=[$L3_start,$L3_end]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2-$OXIDE_THICKNESS3-$GATE_THICKNESS3, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2-$OXIDE_THICKNESS3]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2-$OXIDE_THICKNESS3-$GATE_THICKNESS3, -$OXIDE_THICKNESS-$OXIDE_THICKNESS2-$OXIDE_THICKNESS3]
+		#ST={($DOTW/2-$SET_QD1_GAP,$DomainYend),($DomainXstart,$DomainYend),($DomainXstart,$DomainYstart),($DOTW/2-$SET_QD1_GAP,$DomainYstart)}
+         vertex{x=-$DOTW/2-$SET_QD1_GAP y=$DomainYend}
+
+         vertex{x=$DomainXstart y=$DomainYend }
+
+         vertex{x=$DomainXstart y=$DomainYstart}
+
+         vertex{x=-$DOTW/2-$SET_QD1_GAP y=$DomainYstart}
+axis=[0,0,-1]
+
+      }
+      contact { name = STB}
+   }
+
+region{
+      polygonal_prism{  #P1 layer 2
+z = [$L2_start,$L2_end]
+		 #P1={(-$DOTW-$GATE_OVERLAP,-$DOTH/2-B_HEIGHT_FROM_C-$GATE_OVERLAP),($GATE_OVERLAP+$DotW,-$DOTH/2-B_HEIGHT_FROM_C-$GATE_OVERLAP),(-$DOTW/2-$GATE_OVERLAP,$DomainYend),($DOTW/2+$GATE_OVERLAP,$DomainYend)}
+         #vertex{x=-$DOTW/2-$GATE_OVERLAP y=$DOTH/2-$P1H }#-$DOTH/2-$B_HEIGHT_FROM_C-$GATE_OVERLAP}
+
+         #vertex{x= $DOTW/2+$GATE_OVERLAP y=$DOTH/2-$P1H}#-$DOTH/2-$B_HEIGHT_FROM_C-$GATE_OVERLAP}
+
+         vertex{x=-$DOTW/2-$GATE_OVERLAP y=0+$P1H} 
+         vertex{x= $DOTW/2+$GATE_OVERLAP y=0+$P1H}
+         vertex{x= $DOTW/2+$GATE_OVERLAP y=$DomainYend}       
+         vertex{x=-$DOTW/2-$GATE_OVERLAP y=$DomainYend}
+
+         
+axis=[0,0,-1]
+      }
+      contact { name = P1M
+                          
+      }
+   }
+#P1 mirror
+region{
+      polygonal_prism{ # P1 layer 2
+ z=[$L2_start,$L2_end]
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$OXIDE_THICKNESS2]
+         #P1={(-$DOTW-$GATE_OVERLAP,-$DOTH/2-B_HEIGHT_FROM_C-$GATE_OVERLAP),($GATE_OVERLAP+$DotW,-$DOTH/2-B_HEIGHT_FROM_C-$GATE_OVERLAP),(-$DOTW/2-$GATE_OVERLAP,$DomainYend),($DOTW/2+$GATE_OVERLAP,$DomainYend)}
+         
+
+         vertex{x= $DOTW/2+$GATE_OVERLAP y=-$P1H}#$DOTH/2+$B_HEIGHT_FROM_C+$GATE_OVERLAP}
+         vertex{x=-$DOTW/2-$GATE_OVERLAP y=-$P1H}#$DOTH/2+$B_HEIGHT_FROM_C+$GATE_OVERLAP}
+         
+         vertex{x=-$DOTW/2-$GATE_OVERLAP y=$DomainYstart}
+
+         vertex{x= $DOTW/2+$GATE_OVERLAP y=$DomainYstart}
+axis=[0,0,-1]
+      }
+      contact { name = P1
+
+}
+   }
+
+
+region{
+      polygonal_prism{ # P2 layer 2
+z=[$L2_start,$L2_end]
+         
+      #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$OXIDE_THICKNESS2]
+		 #P2={($DOTW/2+$GATE_OVERLAP+$P2P_GAP,-$DOTH/2-B_HEIGHT_FROM_C-$GATE_OVERLAP),($DOTW/2+$GATE_OVERLAP+$P2P_GAP+$P2W,-$DOTH/2-B_HEIGHT_FROM_C-$GATE_OVERLAP),($DOTW/2+$GATE_OVERLAP+$P2P_GAP+$P2W,$DomainYend),($DOTW/2+$GATE_OVERLAP+$P2P_GAP,$DomainYend)}
+         vertex{x=$DOTW/2+$GATE_OVERLAP+$P2P_GAP y=$DOTH/2+$B_HEIGHT_FROM_C+$GATE_OVERLAP}
+
+         vertex{x=$DOTW/2+$GATE_OVERLAP+$P2P_GAP+$P2W y=$DOTH/2+$B_HEIGHT_FROM_C+$GATE_OVERLAP}
+         
+         vertex{x=$DOTW/2+$GATE_OVERLAP+$P2P_GAP+$P2W y=$DomainYstart}
+
+         vertex{x=$DOTW/2+$GATE_OVERLAP+$P2P_GAP y=$DomainYstart}
+axis=[0,0,-1]
+      }
+      contact { name = P2}
+   }
+
+region{
+      polygonal_prism{ # R layer 2
+z=[$L2_start,$L2_end]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$OXIDE_THICKNESS2]
+		 #R ={($DOTW/2+$GATE_OVERLAP+$P2P_GAP+$P2W+$P2P_GAP,-$DOTH/2-B_HEIGHT_FROM_C-$GATE_OVERLAP),($DomainXend,-$DOTH/2-B_HEIGHT_FROM_C-$GATE_OVERLAP),($DomainXend,$DOTH/2+B_HEIGHT_FROM_C+$GATE_OVERLAP),($DOTW/2+$GATE_OVERLAP+$P2P_GAP+$P2W+$P2P_GAP,$DOTH/2+B_HEIGHT_FROM_C+$GATE_OVERLAP)}
+         vertex{x=$DOTW/2+$GATE_OVERLAP+$P2P_GAP+$P2W+$P2P_GAP y=-$DOTH/2-$B_HEIGHT_FROM_C-$GATE_OVERLAP}
+
+         vertex{x=$DomainXend y=-$DOTH/2-$B_HEIGHT_FROM_C-$GATE_OVERLAP}
+         
+         vertex{x=$DomainXend y=$DOTH/2+$B_HEIGHT_FROM_C+$GATE_OVERLAP}
+
+         vertex{x=$DOTW/2+$GATE_OVERLAP+$P2P_GAP+$P2W+$P2P_GAP y=$DOTH/2+$B_HEIGHT_FROM_C+$GATE_OVERLAP}
+axis=[0,0,-1]
+      }
+      contact { name = R}
+   }
+
+region{
+      polygonal_prism{ # RB layer 2
+z=[$L2_start,$L2_end]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$OXIDE_THICKNESS2]
+		 #RB={(-$DOTW/2-$SET_QD1_GAP,$SETDH/2),(-$DOTW/2-$SET_QD1_GAP,$SETDH/2+$SETBW),($DomainXstart,$SETDH/2+$SETBW),($DomainXstart,$SETDH/2)}
+         vertex{x=-$DOTW/2-$SET_QD1_GAP+$GATE_OVERLAP    y=$SETDH/2}
+
+         vertex{x=-$DOTW/2-$SET_QD1_GAP+$GATE_OVERLAP y=$SETDH/2+$SETBW}
+         
+         vertex{x=$DomainXstart y=$SETDH/2+$SETBW}
+
+         vertex{x=$DomainXstart y=$SETDH/2}
+axis=[0,0,-1]
+      }
+      contact { name = RB}
+   }
+
+
+
+
+
+   
+   region{
+      polygonal_prism{ # LB layer 2
+z=[$L2_start,$L2_end]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2]
+
+         #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2-$GATE_THICKNESS2, -$OXIDE_THICKNESS-$GATE_THICKNESS-$OXIDE_THICKNESS2]
+		 #LB={(-$DOTW/2-$SET_QD1_GAP,-$SETDH/2),(-$DOTW/2-$SET_QD1_GAP,-$SETDH/2-$SETBW),($DomainXstart,-$SETDH/2-$SETBW),($DomainXstart,-$SETDH/2)} 
+         vertex{x=-$DOTW/2-$SET_QD1_GAP+$GATE_OVERLAP y=-$SETDH/2}
+
+         vertex{x=-$DOTW/2-$SET_QD1_GAP+$GATE_OVERLAP y=-$SETDH/2-$SETBW}
+         
+         vertex{x=$DomainXstart y=-$SETDH/2-$SETBW}
+
+         vertex{x=$DomainXstart y=-$SETDH/2}
+axis=[0,0,-1]
+      }
+      contact { name = LB}
+   }
+
+
+
+region{
+      polygonal_prism{ # C layer 1
+z=[$L1_start,$L1_end]
+
+        #z = [-$OXIDE_THICKNESS-$GATE_THICKNESS, -$OXIDE_THICKNESS]
+	  #C={(-$DOTW/2-$C_CD,$DomainYstart),($DomainXend,$DomainYstart),($DomainXend,-$DOTH/2),(-$DOTW/2,-$DOTH/2),(-$DOTW/2,$DOTH/2),($DomainXend,$DOTH/2),($DomainXend,$DomainYend),(-$DOTW/2-$C_CD,$DomainYend)}
+        vertex{x=-$DOTW/2-$C_CD y=$DomainYstart}
+         
+        vertex{x=$DomainXend y=$DomainYstart}
+
+        vertex{x=$DomainXend y=-$DOTH/2}
+        
+        vertex{x=-$DOTW/2 y=-$DOTH/2}
+		
+	  vertex{x=-$DOTW/2 y=$DOTH/2}
+         
+        vertex{x=$DomainXend y=$DOTH/2}
+
+        vertex{x=$DomainXend y=$DomainYend}
+        
+        vertex{x=-$DOTW/2-$C_CD y=$DomainYend}
+axis=[0,0,-1]
+
+      }
+      contact { name = C}
+   }
+
+
+
+}
+strain{
+  pseudomorphic_strain{}
+  growth_direction = [0, 0, 1]
+ }
+
+
+contacts{
+  
+   schottky{
+      name = B1
+      bias = $V_B1
+      barrier = $SCHOTTKY_BARRIER 
+   }
+
+schottky{
+      name = B2
+      bias = $V_B2
+      barrier = $SCHOTTKY_BARRIER 
+   }
+
+schottky{
+      name = P1
+      bias = $V_P1
+      barrier = $SCHOTTKY_BARRIER 
+   }
+schottky{
+      name = P1M
+      bias = $V_P1M
+      barrier = $SCHOTTKY_BARRIER 
+   }
+
+
+schottky{
+      name = P2
+      bias = $V_P2
+      barrier = $SCHOTTKY_BARRIER 
+   }
+   
+   schottky{
+      name = C
+      bias = $V_C
+      barrier = $SCHOTTKY_BARRIER 
+   }
+   schottky{
+      name = R
+      bias = $V_R
+      barrier = $SCHOTTKY_BARRIER 
+   }
+
+
+
+schottky{
+      name = LB
+      bias = $V_LB
+      barrier = $SCHOTTKY_BARRIER 
+   }
+
+schottky{
+      name = RB
+      bias = $V_RB
+      barrier = $SCHOTTKY_BARRIER 
+   }
+
+
+schottky{
+      name = STB
+      bias = $V_STB
+      barrier = $SCHOTTKY_BARRIER 
+   }
+
+fermi{ name = Fermi0 bias = 0} # define reference energy
+fermi_electron{
+     name = SiCap
+     bias=0.0 #apply voltage to poisson-cluster (required for Dirichlet)
+     }
+}
+
+classical{
+#  Delta{ output_bandedge{ averaged = no } }
+   Delta{}
+   HH{}
+   LH{}
+   SO{}
+   output_bandedges{ averaged = no }
+   output_carrier_densities{}
+   #output_ionized_dopant_densities{}
+   output_intrinsic_density{}
+}
+
+poisson{
+   output_potential{}
+   charge_neutral{}
+   output_electric_field{}
+   bisection{robust=yes}
+   
+   newton_solver{}
+}
+
+currents{
+   recombination_model{
+      SRH         = no
+      Auger       = no
+      radiative   = no
+   }
+   output_fermi_levels{}
+}
+quantum {
+   region{
+      name = "quantum_region_2DEG"
+      z = [-1, 20]
+      x = [$DomainXstart, $DomainXend]
+      y = [$DomainYstart, $DomainYend]
+   
+      boundary{ 
+          x = neumann
+          y = neumann
+          z = dirichlet
+        }
+      
+      Delta{
+         num_ev = $number_eigenvalues # many eigenenergies have to be calculated in each band (minimum)
+      }
+
+      quantize_z{}
+
+      		
+   }
+
+}
+
+
+output{ 
+    only_sections=yes
+    format2D = VTKAscii
+    format3D = VTKAscii
+
+     
+section2D{
+       name="DEG_z_2"
+       z=2
+}
+
+
+
+    section1D{ 
+       name = "core_through_dot" 
+       x = 0
+       y= 0
+    }
+section{ 
+       name = "2DEG_CORES" 
+       range_x = [-30   , 30 ]   # range in x direction [nm]
+       range_y = [-30, 30]   # range in y direction [nm] (2D or 3D only)
+       range_z = [0, 10]   # range in z direction [nm] (3D only)
+
+    }
+
+
+   section{
+    name = "2DEG_-1-20"       # name of section enters file name
+    range_x = [$DomainXstart   , $DomainXend ]   # range in x direction [nm]
+    range_y = [$DomainYstart, $DomainYend]   # range in y direction [nm] (2D or 3D only)
+    range_z = [-1, 20]   # range in z direction [nm] (3D only)
+}
+   }
+
+run{
+   solve_strain{}   
+   poisson{}
+   quantum_poisson{
+      iterations          = 30
+   }  # (solve Schroedinger, Poisson (and current) self-consistently)
+}
+
